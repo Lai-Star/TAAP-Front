@@ -1,7 +1,13 @@
 import BubbleSort from '../BubbleSort';
-import { equalArray, notSortedArray, sortedArray, SortTester } from '../../SortTester';
+import {
+  equalArr,
+  notSortedArr,
+  reverseArr,
+  sortedArr,
+  SortTester,
+} from '../../SortTester';
 
-describe('bubbleSort', () => {
+describe('BubbleSort', () => {
   it('should sort array', () => {
     SortTester.testSort(BubbleSort);
   });
@@ -16,9 +22,10 @@ describe('bubbleSort', () => {
     const callbacks = { visitingCallback };
     const sorter = new BubbleSort(callbacks);
 
-    sorter.sort(sortedArray);
+    const arrayAfterSorting = sorter.sort(sortedArr);
 
-    expect(visitingCallback).toHaveBeenCalledTimes(90);
+    expect(arrayAfterSorting).toEqual(sortedArr);
+    expect(visitingCallback).toHaveBeenCalledTimes(19);
   });
 
   it('should visit not-sorted array element specified number of times', () => {
@@ -27,9 +34,10 @@ describe('bubbleSort', () => {
     const callbacks = { visitingCallback };
     const sorter = new BubbleSort(callbacks);
 
-    sorter.sort(notSortedArray);
+    const arrayAfterSorting = sorter.sort(notSortedArr);
 
-    expect(visitingCallback).toHaveBeenCalledTimes(90);
+    expect(arrayAfterSorting).toEqual(sortedArr);
+    expect(visitingCallback).toHaveBeenCalledTimes(19);
   });
 
   it('should visit equal array element specified number of times', () => {
@@ -38,8 +46,21 @@ describe('bubbleSort', () => {
     const callbacks = { visitingCallback };
     const sorter = new BubbleSort(callbacks);
 
-    sorter.sort(equalArray);
+    const arrayAfterSorting = sorter.sort(equalArr);
 
-    expect(visitingCallback).toHaveBeenCalledTimes(90);
+    expect(arrayAfterSorting).toEqual(equalArr);
+    expect(visitingCallback).toHaveBeenCalledTimes(19);
+  });
+
+  it('should visit reverse sorted array element specified number of times', () => {
+    const visitingCallback = jest.fn();
+
+    const callbacks = { visitingCallback };
+    const sorter = new BubbleSort(callbacks);
+
+    const arrayAfterSorting = sorter.sort(reverseArr);
+
+    expect(arrayAfterSorting).toEqual(sortedArr);
+    expect(visitingCallback).toHaveBeenCalledTimes(19);
   });
 });
