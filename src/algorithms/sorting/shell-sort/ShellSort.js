@@ -3,7 +3,7 @@ import Sort from '../Sort';
 export default class ShellSort extends Sort {
   sort(originalArray) {
     // Prevent original array from mutations.
-    const array = [...originalArray];
+    const array = originalArray.slice(0);
 
     // Define a gap distance.
     let gap = Math.floor(array.length / 2);
