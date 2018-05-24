@@ -10,8 +10,6 @@ Each algorithm and data structure have its own separate README
 with related explanations and links for further reading and YouTube
 videos.
 
-Read this in other languages: [Chinese](https://github.com/trekhleb/javascript-algorithms/blob/master/README.zh-CN.md)
-
 ## Data Structures
 
 Data structure is a particular way of organizing and storing data in a computer so that it can 
@@ -192,7 +190,7 @@ Below is the list of some of the most used Big O notations and their performance
 | **O(1)**       | 1                            | 1                             | 1                               |
 | **O(log N)**   | 3                            | 6                             | 9                               |
 | **O(N)**       | 10                           | 100                           | 1000                            |
-| **O(N log N)** | 30                           | 600                           | 9000                            |
+| **O(N log N)** | 30                           | 60                            | 9000                            |
 | **O(N^2)**     | 100                          | 10000                         | 1000000                         |
 | **O(2^N)**     | 1024                         | 1.26e+29                      | 1.07e+301                       |
 | **O(N!)**      | 3628800                      | 9.3e+157                      | 4.02e+2567                      |
