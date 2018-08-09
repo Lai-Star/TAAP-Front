@@ -1,88 +1,63 @@
-/**
- * A prime number used to create
- * the hash representation of a word
- *
- * Bigger the prime number,
- * bigger the hash value
- */
-const PRIME = 97;
+import PolynomialHash from '../../cryptography/polynomial-hash/PolynomialHash';
 
 /**
- * Function that creates hash representation of the word.
+ * Checks if two strings are equal.
  *
- * @param {string} word
- * @return {number}
+ * We may simply compare (string1 === string2) but for the
+ * purpose of analyzing algorithm time complexity let's do
+ * it character by character.
+ *
+ * @param {string} string1
+ * @param {string} string2
  */
-export function hashWord(word) {
-  let hash = 0;
-
-  for (let charIndex = 0; charIndex < word.length; charIndex += 1) {
-    hash += word[charIndex].charCodeAt(0) * (PRIME ** charIndex);
+function stringsAreEqual(string1, string2) {
+  if (string1.length !== string2.length) {
+    return false;
   }
 
-  return hash;
+  for (let charIndex = 0; charIndex < string1.length; charIndex += 1) {
+    if (string1[charIndex] !== string2[charIndex]) {
+      return false;
+    }
+  }
+
+  return true;
 }
 
 /**
- * Function that creates hash representation of the word
- * based on previous word (shifted by one character left) hash value.
- *
- * Recalculates the hash representation of a word so that it isn't
- * necessary to traverse the whole word again
- *
- * @param {number} prevHash
- * @param {string} prevWord
- * @param {string} newWord
- * @return {number}
+ * @param {string} text - Text that may contain the searchable word.
+ * @param {string} word - Word that is being searched in text.
+ * @return {number} - Position of the word in text.
  */
-export function reHashWord(prevHash, prevWord, newWord) {
-  const newWordLastIndex = newWord.length - 1;
-  let newHash = prevHash - prevWord[0].charCodeAt(0);
-  newHash /= PRIME;
-  newHash += newWord[newWordLastIndex].charCodeAt(0) * (PRIME ** newWordLastIndex);
+export default function rabinKarp(text, word) {
+  const hasher = new PolynomialHash();
 
-  return newHash;
-}
-
-/**
- * @param {string} text
- * @param {string} word
- * @return {number}
- */
-export function rabinKarp(text, word) {
   // Calculate word hash that we will use for comparison with other substring hashes.
-  const wordHash = hashWord(word);
+  const wordHash = hasher.hash(word);
 
-  let prevSegment = null;
-  let currentSegmentHash = null;
+  let prevFrame = null;
+  let currentFrameHash = null;
 
-  // Go through all substring of the text that may match
-  for (let charIndex = 0; charIndex <= text.length - word.length; charIndex += 1) {
-    const currentSegment = text.substring(charIndex, charIndex + word.length);
+  // Go through all substring of the text that may match.
+  for (let charIndex = 0; charIndex <= (text.length - word.length); charIndex += 1) {
+    const currentFrame = text.substring(charIndex, charIndex + word.length);
 
     // Calculate the hash of current substring.
-    if (currentSegmentHash === null) {
-      currentSegmentHash = hashWord(currentSegment);
+    if (currentFrameHash === null) {
+      currentFrameHash = hasher.hash(currentFrame);
     } else {
-      currentSegmentHash = reHashWord(currentSegmentHash, prevSegment, currentSegment);
+      currentFrameHash = hasher.roll(currentFrameHash, prevFrame, currentFrame);
     }
 
-    prevSegment = currentSegment;
+    prevFrame = currentFrame;
 
     // Compare the hash of current substring and seeking string.
-    if (wordHash === currentSegmentHash) {
-      // In case if hashes match let's check substring char by char.
-      let numberOfMatches = 0;
-
-      for (let deepCharIndex = 0; deepCharIndex < word.length; deepCharIndex += 1) {
-        if (word[deepCharIndex] === text[charIndex + deepCharIndex]) {
-          numberOfMatches += 1;
-        }
-      }
-
-      if (numberOfMatches === word.length) {
-        return charIndex;
-      }
+    // In case if hashes match let's check substring char by char.
+    if (
+      wordHash === currentFrameHash
+      && stringsAreEqual(text.substr(charIndex, word.length), word)
+    ) {
+      return charIndex;
     }
   }
 
