@@ -1,44 +1,42 @@
-export default {
+/**
+ * Finds prime factors of a number.
+ *
+ * @param {number} n - the number that is going to be split into prime factors.
+ * @returns {number[]} - array of prime factors.
+ */
+export function primeFactors(n) {
+  // Clone n to avoid function arguments override.
+  let nn = n;
 
-  getPrimeFactors : (n) => {
-    let factorsArray = []; // an array where all the prime factors will be stored
+  // Array that stores the all the prime factors.
+  const factors = [];
 
-    //over here optimisation is made by running loop till sqrt(n) instead of n
-    for (let i = 2 ; i <= Math.sqrt(n); i++){
-      if(n % i === 0){  // if check to ensure i completely divides n
-        let count = 0;  // This count keeps track of number of times i divides n
-        while(n % i === 0){
-          n = n/i;       // override the value of n
-          count++;        // count value updated
-        }
-        factorsArray.push(i); // array gets populated
-      }
+  // Running the loop till sqrt(n) instead of n to optimise time complexity from O(n) to O(sqrt(n)).
+  for (let factor = 2; factor <= Math.sqrt(nn); factor += 1) {
+    // Check that factor divides n without a reminder.
+    while (nn % factor === 0) {
+      // Overriding the value of n.
+      nn /= factor;
+      // Saving the factor.
+      factors.push(factor);
     }
-    if(n !== 1){ // finally we cannot push 1 to array since it cannot be a prime-factor
-        factorsArray.push(n);
-    }
-  
-    return factorsArray;
-  },
-
-  //returns accurate prime-factors count
-  getPrimeFactorsCount : (factorsArray) => {
-    return factorsArray.length;
-  },
-  
-  
-  //returns Hardy-Ramanujan Approximation of prime-factors count 
-  hardyRamanujanApprox : (n) => {
-    return Math.log(Math.log(n));
-  },
-  
-  //returns %age of error in approximation using formula to that of accurate result. 
-  errorPercent : (exactFactorCount,approximateFactorCount) => {
-  let diff = exactFactorCount-approximateFactorCount > 0 ? exactFactorCount-approximateFactorCount: -(exactFactorCount-approximateFactorCount);
-  return (diff/exactFactorCount * 100);
   }
-  
 
+  // The ultimate reminder should be a last prime factor,
+  // unless it is not 1 (since 1 is not a prime number).
+  if (nn !== 1) {
+    factors.push(nn);
+  }
+
+  return factors;
 }
 
-
+/**
+ * Hardy-Ramanujan approximation of prime factors count.
+ *
+ * @param {number} n
+ * @returns {number} - approximate number of prime factors.
+ */
+export function hardyRamanujan(n) {
+  return Math.log(Math.log(n));
+}
