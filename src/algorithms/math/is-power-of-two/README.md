@@ -12,7 +12,7 @@ the number can't be a power of two.
 
 **Bitwise solution**
 
-Powers of two in binary form always have just one bit set.
+Powers of two in binary form always have just one bit.
 The only exception is with a signed integer (e.g. an 8-bit
 signed integer with a value of -128 looks like: `10000000`)
 
